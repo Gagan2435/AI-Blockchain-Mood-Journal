@@ -1,21 +1,32 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>AI Blockchain Mood Journal</title>
-    <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>A Safe Space for Your Feelings</title>
+    <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-    <h1>AI Blockchain Mood Journal</h1>
-    <textarea id="entry" placeholder="Write your feelings here..."></textarea><br>
-    <button id="analyzeSaveBtn">Analyze & Save</button>
-
-    <h2>Detected Emotion:</h2>
-    <p id="emotionResult">None yet</p>
-
-    <h2>History:</h2>
-    <div id="history"></div>
-
+    <div class="emoji-container"></div>
+    <div class="container fade-in">
+        <h1 class="animated-heading">A Safe Space for Your Feelings</h1>
+        <textarea id="journalInput" placeholder="Write your thoughts here..."></textarea>
+        <button id="submitBtn">Save My Entry</button>
+        <p id="result"></p>
+    </div>
     <script src="script.js"></script>
+    <script>
+        const emojis = ['❤️', '🌈', '😡', '😢', '😃', '✨', '💫', '🌻', '🍀', '🌸'];
+        const emojiContainer = document.querySelector('.emoji-container');
+        for (let i = 0; i < 30; i++) {
+            const emoji = document.createElement('div');
+            emoji.classList.add('emoji');
+            emoji.innerText = emojis[Math.floor(Math.random() * emojis.length)];
+            emoji.style.left = `${Math.random() * 100}%`;
+            emoji.style.top = `${Math.random() * 100}%`;
+            emoji.style.fontSize = `${20 + Math.random() * 30}px`;
+            emojiContainer.appendChild(emoji);
+        }
+    </script>
 </body>
 </html>
