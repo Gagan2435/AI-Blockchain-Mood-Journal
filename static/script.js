@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded", () => {
         emoji.style.top = `${Math.random() * 100}%`;
         emoji.style.fontSize = `${20 + Math.random() * 30}px`;
         emoji.style.position = "absolute";
-        emoji.style.opacity = 0.4;
+        emoji.style.opacity = 0.3;
         emojiContainer.appendChild(emoji);
     }
 
@@ -37,7 +37,11 @@ document.addEventListener("DOMContentLoaded", () => {
         })
         .then(data => {
             const result = document.getElementById('result');
-            result.innerText = `✅ ${data.message} | Hash: ${data.hash}`;
+            result.innerHTML = `
+                ✅ ${data.message} <br>
+                🔗 Hash: ${data.hash} <br>
+                🩺 Detected Emotion: <b>${data.emotion}</b> (${data.confidence}% confidence)
+            `;
             result.style.color = "green";
             document.getElementById('journalInput').value = '';
         })
