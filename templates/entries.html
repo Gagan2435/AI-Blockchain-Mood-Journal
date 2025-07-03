@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>📓 Your Journal Entries</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        body {
+            background: linear-gradient(135deg, #fceabb, #f8b500);
+            font-family: 'Segoe UI', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            min-height: 100vh;
+            box-sizing: border-box;
+            overflow-y: auto;
+        }
+        h1 {
+            text-align: center;
+            font-size: 2em;
+            margin-bottom: 15px;
+        }
+        .entry-card {
+            background: #ffffffdd;
+            border-radius: 12px;
+            padding: 15px;
+            margin: 15px 0;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+        }
+        .entry-card:hover {
+            transform: scale(1.02);
+        }
+        .entry-emoji {
+            font-size: 2rem;
+            margin-right: 10px;
+        }
+        button, select, input[type="date"] {
+            width: 100%;
+            padding: 10px;
+            border-radius: 8px;
+            border: none;
+            font-size: 1em;
+            margin-top: 8px;
+            cursor: pointer;
+        }
+        button {
+            background-color: #f8b500;
+            color: white;
+        }
+        button:hover {
+            background-color: #d49d00;
+        }
+        .delete-button {
+            background-color: #e74c3c;
+        }
+        .delete-button:hover {
+            background-color: #c0392b;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📓 Your Journal Entries</h1>
+
+        <form id="filterForm">
+            <input type="date" name="date">
+            <select name="emotion">
+                <option value="">All Emotions</option>
+                <option value="Happy">Happy</option>
+                <option value="Sad">Sad</option>
+                <option value="Neutral">Neutral</option>
+            </select>
+            <button type="submit">Apply Filters</button>
+        </form>
+
+        {% if entries %}
+            {% for entry in entries %}
+                {% set emoji = '🙂' %}
+                {% if entry.emotion == 'Happy' %}
+                    {% set emoji = '😊' %}
+                {% elif entry.emotion == 'Sad' %}
+                    {% set emoji = '😢' %}
+                {% elif entry.emotion == 'Neutral' %}
+                    {% set emoji = '😐' %}
+                {% endif %}
+
+                <div class="entry-card">
+                    <p><span class="entry-emoji">{{ emoji }}</span> <b>{{ entry.emotion }} ({{ entry.confidence }}%)</b></p>
+                    <p>{{ entry.text }}</p>
+                    <p>🕒 <i>{{ entry.timestamp }}</i></p>
+                    <p>🔗 <code>{{ entry.hash }}</code></p>
+                    <button class="delete-button" onclick="deleteEntry('{{ entry.hash }}')">🗑️ Delete Entry</button>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p style="text-align: center;">😴 No entries found.</p>
+        {% endif %}
+
+        <button onclick="window.location.href='/'">🔙 Back to Journal</button>
+    </div>
+
+    <script>
+        document.getElementById('filterForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const date = this.date.value;
+            const emotion = this.emotion.value;
+            let url = '/entries?';
+            if (date) url += `date=${date}&`;
+            if (emotion) url += `emotion=${emotion}`;
+            window.location.href = url;
+        });
+
+        function deleteEntry(hash) {
+            if (!confirm("Are you sure you want to delete this entry?")) return;
+            fetch(`/delete/${hash}`, { method: 'DELETE' })
+            .then(response => {
+                if (!response.ok) throw new Error("Failed to delete entry.");
+                window.location.reload();
+            })
+            .catch(error => {
+                alert("Error deleting entry.");
+                console.error(error);
+            });
+        }
+    </script>
+</body>
+</html>

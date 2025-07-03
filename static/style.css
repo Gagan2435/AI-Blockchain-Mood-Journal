@@ -95,3 +95,64 @@ button:hover {
     from { opacity: 0; transform: translateY(-20px); }
     to { opacity: 1; transform: translateY(0); }
 }
+.entries-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    justify-content: center;
+    padding: 20px;
+}
+
+.entry-card {
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 15px;
+    padding: 15px;
+    width: 300px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    transition: transform 0.3s;
+}
+
+.entry-card:hover {
+    transform: scale(1.02);
+}
+
+.back-button {
+    display: block;
+    text-align: center;
+    margin: 20px auto;
+    padding: 10px 20px;
+    background: #6c63ff;
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+}
+
+.back-button:hover {
+    background: #574fd6;
+}
+.entry-card {
+    background: #ffffff;
+    padding: 15px;
+    margin: 10px 0;
+    border-radius: 12px;
+    box-shadow: 0 0 12px rgba(0,0,0,0.1);
+}
+.dark-mode {
+    background: #121212;
+    color: #f1f1f1;
+}
+
+.dark-mode .entry-card {
+    background: #1e1e1e;
+    color: #f1f1f1;
+}
+
+.dark-mode button {
+    background-color: #333;
+    color: white;
+}
+
+.dark-mode button:hover {
+    background-color: #555;
+}
+

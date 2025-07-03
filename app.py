@@ -3,24 +3,34 @@ from datetime import datetime
 import hashlib
 import json
 import os
-
-from transformers import pipeline
+from textblob import TextBlob
 
 app = Flask(__name__)
-
-# Initialize emotion detection pipeline
-emotion_classifier = pipeline("text-classification", model="bhadresh-savani/distilbert-base-uncased-emotion", top_k=None)
 
 # Create folder to store entries if not exists
 if not os.path.exists("entries"):
     os.makedirs("entries")
 
+
 def generate_hash(data):
     return hashlib.sha256(data.encode()).hexdigest()
+
+
+def detect_emotion(text):
+    blob = TextBlob(text)
+    polarity = blob.sentiment.polarity
+    if polarity > 0.2:
+        return "Happy", round(polarity * 100, 2)
+    elif polarity < -0.2:
+        return "Sad", round(abs(polarity) * 100, 2)
+    else:
+        return "Neutral", round(abs(polarity) * 100, 2)
+
 
 @app.route("/")
 def home():
     return render_template("index.html")
+
 
 @app.route("/save", methods=["POST"])
 def save_entry():
@@ -28,18 +38,14 @@ def save_entry():
     entry_text = data.get("entry", "")
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-    # Predict emotions
-    results = emotion_classifier(entry_text)[0]
-    # Get emotion with highest score
-    top_emotion = max(results, key=lambda x: x['score'])
-    emotion_label = top_emotion['label']
-    confidence = round(top_emotion['score'] * 100, 2)
+    # Server-side emotion detection
+    emotion, confidence = detect_emotion(entry_text)
 
     entry_data = {
         "text": entry_text,
         "timestamp": timestamp,
         "hash": generate_hash(entry_text + timestamp),
-        "emotion": emotion_label,
+        "emotion": emotion,
         "confidence": confidence
     }
 
@@ -50,9 +56,30 @@ def save_entry():
     return jsonify({
         "message": "Entry saved successfully!",
         "hash": entry_data["hash"],
-        "emotion": emotion_label,
+        "emotion": emotion,
         "confidence": confidence
     })
+
+
+@app.route("/entries")
+def view_entries():
+    entries = []
+    emotion_filter = request.args.get('emotion')
+    date_filter = request.args.get('date')
+
+    for file in os.listdir("entries"):
+        if file.endswith(".json"):
+            with open(os.path.join("entries", file), "r") as f:
+                data = json.load(f)
+                if emotion_filter and data.get("emotion", "").lower() != emotion_filter.lower():
+                    continue
+                if date_filter and not data.get("timestamp", "").startswith(date_filter):
+                    continue
+                entries.append(data)
+
+    entries.sort(key=lambda x: x["timestamp"], reverse=True)
+    return render_template("entries.html", entries=entries)
+
 
 if __name__ == "__main__":
     app.run(debug=True)
