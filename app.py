@@ -81,5 +81,6 @@ def view_entries():
     return render_template("entries.html", entries=entries)
 
 
+
 if __name__ == "__main__":
     app.run(debug=True)
