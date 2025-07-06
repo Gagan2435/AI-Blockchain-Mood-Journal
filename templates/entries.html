@@ -1,19 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>📖 Your Saved Entries</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <style>
-        html, body {
+        html,
+        body {
             height: 100%;
             margin: 0;
             padding: 0;
             font-family: 'Segoe UI', sans-serif;
             background: linear-gradient(135deg, #dbeafe, #f0fdf4);
-            overflow: hidden; /* prevent double scroll */
+            overflow: hidden;
+            /* prevent double scroll */
         }
+
         .emoji-container {
             position: absolute;
             width: 100%;
@@ -22,6 +26,7 @@
             pointer-events: none;
             z-index: 0;
         }
+
         .main-content {
             position: relative;
             z-index: 1;
@@ -29,22 +34,27 @@
             display: flex;
             flex-direction: column;
         }
+
         .header {
             text-align: center;
             padding: 15px;
         }
+
         .animated-heading {
             font-size: 28px;
             color: #1f2937;
             animation: slideIn 1.5s ease;
             margin: 0;
         }
+
         .controls {
             text-align: center;
             padding: 10px;
         }
+
         .entries-container {
-            flex: 1; /* take remaining space */
+            flex: 1;
+            /* take remaining space */
             overflow-y: auto;
             display: flex;
             flex-wrap: wrap;
@@ -56,6 +66,7 @@
         }
     </style>
 </head>
+
 <body>
     <div class="emoji-container"></div>
 
@@ -71,32 +82,38 @@
 
         <div class="entries-container">
             {% if entries %}
-                {% for entry in entries %}
-                    {% set emoji = '🙂' %}
-                    {% if entry.emotion == 'Happy' %}
-                        {% set emoji = '😊' %}
-                    {% elif entry.emotion == 'Sad' %}
-                        {% set emoji = '😢' %}
-                    {% elif entry.emotion == 'Neutral' %}
-                        {% set emoji = '😐' %}
-                    {% endif %}
+            {% for entry in entries %}
+            {% set emoji = '🙂' %}
+            {% if entry.emotion == 'Happy' %}
+            {% set emoji = '😊' %}
+            {% elif entry.emotion == 'Sad' %}
+            {% set emoji = '😢' %}
+            {% elif entry.emotion == 'Neutral' %}
+            {% set emoji = '😐' %}
+            {% endif %}
 
-                    <div class="entry-card">
-                        <p><span class="entry-emoji">{{ emoji }}</span> <b>{{ entry.emotion }} ({{ entry.confidence }}%)</b></p>
-                        <p>{{ entry.text }}</p>
-                        <p>🕒 <i>{{ entry.timestamp }}</i></p>
-                        <p>🔗 <code>{{ entry.hash }}</code></p>
-                        
-                    </div>
-                {% endfor %}
+            <div class="entry-card">
+                <p><span class="entry-emoji">{{ emoji }}</span> <b>{{ entry.emotion }} ({{ entry.confidence }}%)</b></p>
+                <p>{{ entry.text }}</p>
+                <p>🕒 <i>{{ entry.timestamp }}</i></p>
+                <!-- Hash hidden from UI, but retained in data attribute for Publish -->
+                <button class="publish-button" data-hash="{{ entry.hash }}"
+                    onclick="publishToBlockDAG('{{ entry.hash }}', this)">
+                    🔗 Publish to BlockDAG
+                </button>
+
+              
+
+
+            </div>
+            {% endfor %}
             {% else %}
-                <p style="text-align: center; width: 100%;">😴 No entries found.</p>
+            <p style="text-align: center; width: 100%;">😴 No entries found.</p>
             {% endif %}
         </div>
     </div>
 
     <script>
-        // Floating emojis
         document.addEventListener("DOMContentLoaded", () => {
             const emojis = ['❤️', '🌈', '😡', '😢', '😃', '✨', '💫', '🌻', '🍀', '🌸'];
             const emojiContainer = document.querySelector('.emoji-container');
@@ -112,7 +129,6 @@
                 emojiContainer.appendChild(emoji);
             }
 
-            // Dark mode toggle
             const darkModeToggle = document.getElementById('darkModeToggle');
             if (darkModeToggle) {
                 darkModeToggle.addEventListener('click', function () {
@@ -121,7 +137,28 @@
             }
         });
 
-      
+        // ✅ Place it globally
+        function publishToBlockDAG(hash, buttonElement) {
+            buttonElement.disabled = true;
+            buttonElement.textContent = "⏳ Publishing...";
+            fetch(`/publish/${hash}`, { method: 'POST' })
+                .then(response => {
+                    if (!response.ok) throw new Error("Failed to publish to BlockDAG.");
+                    return response.json();
+                })
+                .then(data => {
+                    alert(data.message);
+                    buttonElement.textContent = "✅ Published to BlockDAG";
+                })
+                .catch(error => {
+                    console.error(error);
+                    alert("Error publishing to BlockDAG.");
+                    buttonElement.disabled = false;
+                    buttonElement.textContent = "🔗 Publish to BlockDAG";
+                });
+        }
     </script>
+
 </body>
+
 </html>

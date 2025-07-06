@@ -62,4 +62,23 @@ document.addEventListener("DOMContentLoaded", () => {
             document.body.classList.toggle('dark-mode');
         });
     }
+    
 });
+function publishToBlockDAG(hash, buttonElement) {
+    if (!confirm("Are you sure you want to publish this hash to BlockDAG?")) return;
+    fetch(`/publish/${hash}`, { method: 'POST' })
+    .then(response => {
+        if (!response.ok) throw new Error("Failed to publish to BlockDAG.");
+        return response.json();
+    })
+    .then(data => {
+        alert(data.message);
+        buttonElement.disabled = true;
+        buttonElement.textContent = "✅ Published to BlockDAG";
+    })
+    .catch(error => {
+        alert("Error publishing to BlockDAG.");
+        console.error(error);
+    });
+}
+

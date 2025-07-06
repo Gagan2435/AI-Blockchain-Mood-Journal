@@ -1,3 +1,6 @@
+# =============================
+# app.py (clean final version)
+# =============================
 from flask import Flask, render_template, request, jsonify
 from datetime import datetime
 import hashlib
@@ -7,14 +10,12 @@ from textblob import TextBlob
 
 app = Flask(__name__)
 
-# Create folder to store entries if not exists
+# Ensure entries folder exists
 if not os.path.exists("entries"):
     os.makedirs("entries")
 
-
 def generate_hash(data):
     return hashlib.sha256(data.encode()).hexdigest()
-
 
 def detect_emotion(text):
     blob = TextBlob(text)
@@ -26,11 +27,9 @@ def detect_emotion(text):
     else:
         return "Neutral", round(abs(polarity) * 100, 2)
 
-
 @app.route("/")
 def home():
     return render_template("index.html")
-
 
 @app.route("/save", methods=["POST"])
 def save_entry():
@@ -38,7 +37,6 @@ def save_entry():
     entry_text = data.get("entry", "")
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-    # Server-side emotion detection
     emotion, confidence = detect_emotion(entry_text)
 
     entry_data = {
@@ -60,27 +58,48 @@ def save_entry():
         "confidence": confidence
     })
 
-
 @app.route("/entries")
 def view_entries():
     entries = []
-    emotion_filter = request.args.get('emotion')
-    date_filter = request.args.get('date')
-
     for file in os.listdir("entries"):
         if file.endswith(".json"):
             with open(os.path.join("entries", file), "r") as f:
                 data = json.load(f)
-                if emotion_filter and data.get("emotion", "").lower() != emotion_filter.lower():
-                    continue
-                if date_filter and not data.get("timestamp", "").startswith(date_filter):
-                    continue
                 entries.append(data)
-
     entries.sort(key=lambda x: x["timestamp"], reverse=True)
     return render_template("entries.html", entries=entries)
 
+# ========== BlockDAG Publish Simulation ========== #
+@app.route("/publish/<hash>", methods=["POST"])
+def publish_to_blockdag(hash):
+    entry_file = None
+    for file in os.listdir("entries"):
+        if file.endswith(".json"):
+            with open(os.path.join("entries", file), "r") as f:
+                data = json.load(f)
+                if data.get("hash") == hash:
+                    entry_file = file
+                    timestamp = data.get("timestamp")
+                    break
+    if not entry_file:
+        return jsonify({"message": "Entry not found!"}), 404
 
+    ledger_file = "blockdag_ledger.json"
+    if os.path.exists(ledger_file):
+        with open(ledger_file, "r") as f:
+            ledger = json.load(f)
+    else:
+        ledger = []
+
+    ledger.append({
+        "hash": hash,
+        "timestamp": timestamp
+    })
+
+    with open(ledger_file, "w") as f:
+        json.dump(ledger, f, indent=4)
+
+    return jsonify({"message": "✅ Successfully published to BlockDAG!"}), 200
 
 if __name__ == "__main__":
     app.run(debug=True)
