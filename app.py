@@ -61,13 +61,20 @@ def save_entry():
 @app.route("/entries")
 def view_entries():
     entries = []
+    emotion_counts = {"Happy": 0, "Sad": 0, "Neutral": 0}
+    
     for file in os.listdir("entries"):
         if file.endswith(".json"):
             with open(os.path.join("entries", file), "r") as f:
                 data = json.load(f)
                 entries.append(data)
+                emotion = data.get("emotion")
+                if emotion in emotion_counts:
+                    emotion_counts[emotion] += 1
+    
     entries.sort(key=lambda x: x["timestamp"], reverse=True)
-    return render_template("entries.html", entries=entries)
+    return render_template("entries.html", entries=entries, emotion_counts=emotion_counts)
+
 
 # ========== BlockDAG Publish Simulation ========== #
 @app.route("/publish/<hash>", methods=["POST"])
