@@ -15,6 +15,7 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
+            overflow: hidden;
         }
 
         .register-container {
@@ -26,7 +27,15 @@
             width: 90%;
             max-width: 400px;
             text-align: center;
-            animation: fadeIn 1s ease;
+            animation: floatIn 1s ease-out;
+        }
+
+        .quote {
+            font-size: 16px;
+            color: #6b7280;
+            margin-bottom: 10px;
+            opacity: 0;
+            animation: fadeInUp 1.2s ease-out 0.8s forwards;
         }
 
         h2 {
@@ -85,14 +94,22 @@
             text-decoration: underline;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+        @keyframes floatIn {
+            0% { transform: translateY(80px) scale(0.95); opacity: 0; }
+            60% { transform: translateY(-10px) scale(1.02); opacity: 1; }
+            80% { transform: translateY(5px) scale(0.98); }
+            100% { transform: translateY(0) scale(1); }
+        }
+
+        @keyframes fadeInUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
         }
     </style>
 </head>
 <body>
     <div class="register-container">
+        <div class="quote">✨ Today is a good day to start 🌱</div>
         <h2>🌱 Create Your Account</h2>
         <form method="POST">
             <input type="text" name="username" placeholder="Enter username" required>

@@ -14,17 +14,27 @@
             background-size: 400% 400%;
             animation: gradientBG 15s ease infinite;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             height: 100vh;
             margin: 0;
             overflow: hidden;
+            text-align: center;
         }
 
         @keyframes gradientBG {
             0% { background-position: 0% 50%; }
             50% { background-position: 100% 50%; }
             100% { background-position: 0% 50%; }
+        }
+
+        .quote {
+            font-size: 20px;
+            color: #374151;
+            margin-bottom: 20px;
+            opacity: 0.7;
+            max-width: 90%;
         }
 
         .login-container {
@@ -34,13 +44,12 @@
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
             width: 90%;
             max-width: 400px;
-            text-align: center;
             position: relative;
-            z-index: 1;
+            z-index: 2;
         }
 
         h1 {
-            margin-bottom: 20px;
+            margin-bottom: 10px;
             color: #1f2937;
         }
 
@@ -98,34 +107,40 @@
         .emoji-float {
             position: absolute;
             font-size: 24px;
-            opacity: 0.3;
-            animation: floatEmoji 12s infinite;
+            opacity: 0.2;
+            animation: floatEmoji 25s linear infinite;
+            user-select: none;
+            pointer-events: none;
         }
 
         @keyframes floatEmoji {
             0% { transform: translateY(100vh) rotate(0deg); }
-            100% { transform: translateY(-100vh) rotate(360deg); }
+            100% { transform: translateY(-120vh) rotate(360deg); }
         }
     </style>
 </head>
 
 <body>
+
     <!-- Floating emojis -->
     <script>
         document.addEventListener("DOMContentLoaded", () => {
             const emojis = ['✨', '🌸', '🌈', '💫', '🍀', '❤️', '😃', '🌻', '🦋'];
-            for (let i = 0; i < 20; i++) {
+            for (let i = 0; i < 15; i++) {
                 const emoji = document.createElement("div");
                 emoji.classList.add("emoji-float");
                 emoji.style.left = Math.random() * 100 + "vw";
                 emoji.style.top = Math.random() * 100 + "vh";
-                emoji.style.fontSize = (20 + Math.random() * 20) + "px";
+                emoji.style.fontSize = (20 + Math.random() * 15) + "px";
                 emoji.textContent = emojis[Math.floor(Math.random() * emojis.length)];
-                emoji.style.animationDuration = (8 + Math.random() * 10) + "s";
+                emoji.style.animationDuration = (20 + Math.random() * 10) + "s";
                 document.body.appendChild(emoji);
             }
         });
     </script>
+
+    <!-- Static quote outside container -->
+    <div class="quote" id="quoteDisplay">🌻 Welcome to your calm space</div>
 
     <div class="login-container">
         <h1>🔐 Login</h1>
@@ -136,6 +151,27 @@
         </form>
         <p>Don’t have an account? <a href="/register">Register here</a></p>
     </div>
+
+    <script>
+        const quotes = [
+            "Breathe in calm 🌿",
+            "You matter 💛",
+            "Small steps, big dreams ✨",
+            "Be kind to yourself 🌻",
+            "It’s okay to rest 🛌",
+            "Choose joy 🌈",
+            "You are enough 🌼",
+            "Keep going 💫",
+            "One day at a time 🌷"
+        ];
+
+        // Change quote every 5 seconds
+        let current = 0;
+        setInterval(() => {
+            current = (current + 1) % quotes.length;
+            document.getElementById("quoteDisplay").textContent = quotes[current];
+        }, 3000);
+    </script>
 
 </body>
 
