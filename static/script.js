@@ -64,21 +64,34 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     
 });
-function publishToBlockDAG(hash, buttonElement) {
-    if (!confirm("Are you sure you want to publish this hash to BlockDAG?")) return;
-    fetch(`/publish/${hash}`, { method: 'POST' })
-    .then(response => {
-        if (!response.ok) throw new Error("Failed to publish to BlockDAG.");
-        return response.json();
+function publishToBlockdag(hash, buttonElement, text, timestamp, emotion) {
+    buttonElement.disabled = true;
+    buttonElement.textContent = "Publishing...";
+
+    fetch(`/publish/${hash}`, {
+        method: "POST",
     })
+    .then(response => response.json())
     .then(data => {
         alert(data.message);
+        buttonElement.textContent = "✅ Published";
         buttonElement.disabled = true;
-        buttonElement.textContent = "✅ Published to BlockDAG";
+
+        // ✅ Save to localStorage
+        const publishedEntry = {
+            text: text,
+            hash: hash,
+            timestamp: timestamp,
+            emotion: emotion
+        };
+        let publishedEntries = JSON.parse(localStorage.getItem('publishedEntries')) || [];
+        publishedEntries.push(publishedEntry);
+        localStorage.setItem('publishedEntries', JSON.stringify(publishedEntries));
     })
     .catch(error => {
         alert("Error publishing to BlockDAG.");
-        console.error(error);
+        buttonElement.textContent = "Publish to BlockDAG";
+        buttonElement.disabled = false;
     });
 }
 

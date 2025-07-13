@@ -28,9 +28,30 @@ def generate_hash(data):
 def detect_emotion(text):
     blob = TextBlob(text)
     polarity = blob.sentiment.polarity
+    text_lower = text.lower()
+
+    sad_keywords = ["sad", "depress", "cry", "unhappy", "down", "lonely", "hopeless", "tired", "exhausted", "miserable",
+                    "hurt", "broken", "helpless", "worthless", "upset", "pain", "sorrow", "grief", "heartbroken",
+                    "gloomy", "disappointed", "overwhelmed"]
+
+    happy_keywords = ["happy", "joy", "excited", "love", "great", "amazing", "wonderful", "fantastic", "cheerful",
+                      "delighted", "content", "smile", "laugh", "fun", "blessed", "grateful", "proud", "peaceful",
+                      "optimistic", "good", "satisfied", "hurrah", "yay"]
+
+    neutral_keywords = ["okay", "fine", "normal", "average", "nothing", "alright", "so-so", "neutral", "meh"]
+
+    # keyword fallback
+    if any(word in text_lower for word in sad_keywords):
+        return "Sad", 100
+    if any(word in text_lower for word in happy_keywords):
+        return "Happy", 100
+    if any(word in text_lower for word in neutral_keywords):
+        return "Neutral", 100
+
+    # fallback to polarity thresholds
     if polarity > 0.2:
         return "Happy", round(polarity * 100, 2)
-    elif polarity < -0.2:
+    elif polarity < -0.05:
         return "Sad", round(abs(polarity) * 100, 2)
     else:
         return "Neutral", round(abs(polarity) * 100, 2)
