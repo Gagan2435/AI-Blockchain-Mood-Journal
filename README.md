@@ -3,7 +3,10 @@ A safe space for your feelings — analyzed by AI, sealed with Web3.
 
 Theme: AI × Smart Contracts (BlockDAG Hackathon 2025)
 
-Live Demo: ai-blockchain-mood-journal.onrender.com
+ 🌐 **Live Demo:**
+
+🔗 [https://ai-blockchain-mood-journal.onrender.com](https://ai-blockchain-mood-journal.onrender.com)
+
 (⚠️ May take 20–30 sec to wake up on free Render plan)
 
 🎯 Objective
