@@ -1,51 +1,79 @@
-# AI Blockchain Mood Journal
+🌱 AI Blockchain Mood Journal
+A safe space for your feelings — analyzed by AI, sealed with Web3.
 
-## 📌 Overview
-A **private, secure AI-powered mood journal** where users can write daily emotional entries, analyzed using sentiment detection, and stored on the BlockDAG blockchain for tamper-proof proof of authenticity and privacy.
+Theme: AI × Smart Contracts (BlockDAG Hackathon 2025)
 
-## ⚙️ Tech Stack
-- Frontend: HTML, CSS, JavaScript
-- Backend: Python (Flask)
-- AI: TextBlob or HuggingFace for sentiment analysis
-- Blockchain: BlockDAG + Smart Contracts + SHA-256 hashing
+Live Demo: ai-blockchain-mood-journal.onrender.com
+(⚠️ May take 20–30 sec to wake up on free Render plan)
 
-## 🚀 How to Run Locally
+🎯 Objective
+Create a private, secure mood journal where users can express feelings freely.
+Combine AI (emotion detection) + Blockchain (tamper-proof hashes) for:
 
-1️⃣ Clone this repo:
-```
-git clone https://github.com/Gagan2435/AI-Blockchain-Mood-Journal.git
-```
+✅ Emotional well-being tracking
+✅ Data privacy
+✅ Proof of authenticity using Web3
 
-2️⃣ Navigate inside:
-```
-cd AI-Blockchain-Mood-Journal
-```
+🛠️ How It Works
+✨ Write: Users write a daily journal entry via a clean web interface.
 
-3️⃣ Install requirements:
-```
-pip install flask textblob
-```
+🧠 AI Detection: TextBlob detects the emotion (Happy, Sad, Neutral).
 
-4️⃣ Run the app:
-```
+🔒 Hashing: Each entry is hashed (SHA-256) to secure content integrity.
+
+⛓️ Blockchain Storage: Hash + timestamp are stored on the BlockDAG blockchain, proving the entry’s existence without revealing its content.
+
+📊 View History: Users can see past emotional trends .
+
+🌟 Features
+✅ Write your feelings privately
+✅ AI-powered mood detection
+✅ Tamper-proof hashing of entries
+✅ BlockDAG publish simulation for hackathon demo
+✅ Emotion trends visualization
+✅ Simple login/register for personal data segregation
+
+🖼️ Screenshots
+✏️ Write Entry	📊 Entries + Graph
+
+💡 Applications
+🌿 Personal Mental Health Tracker: Reflect on mood changes.
+🔐 Proof of Authenticity: Immutable mood entries on blockchain.
+📔 Digital Diary (Web3): For users valuing privacy + emotional awareness.
+
+🚀 Run Locally
+git clone https://github.com/Gagan2435/ai-blockchain-mood-journal.git
+cd ai-blockchain-mood-journal
+
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+
+pip install -r requirements.txt
+
 python app.py
-```
+# Visit http://127.0.0.1:5000
 
-5️⃣ Open `index.html` in your browser.
+🗂️ Tech Stack
+Frontend: HTML, CSS, JavaScript, Chart.js
 
-## 💡 Features
-✅ Write daily emotional entries  
-✅ Get emotion analysis using AI sentiment detection  
-✅ Generate SHA-256 hash of entry, store hash + timestamp on blockchain  
-✅ Privacy-friendly: no raw text stored on-chain  
-✅ Track emotional trends safely
+Backend: Python Flask, TextBlob
 
-## 📽️ Demo Video
-TBA (to be added before submission)
+Web3 Layer: BlockDAG blockchain (hash + timestamp)
 
-## 🪪 License
+Storage: JSON-based entry storage
+
+Deployment: Render (free tier)
+
+🚧 Future Plans (Post Hackathon)
+✅ Add advanced emotion detection (using HuggingFace or custom emotion datasets)
+✅ Use IPFS for encrypted entry storage
+✅ Real smart contract deployment on BlockDAG blockchain
+✅ User dashboard with deep emotion trend analysis
+✅ Community collaborations + open-source growth
+
+🙌 Acknowledgements
+Built solo by Gagandeep for the BlockDAG Hackathon 2025.
+
+📜 License
 MIT
-
----
-
 
